@@ -135,22 +135,21 @@ for(i=0; i<posts.length; i++){
         </div>`
 }
 
-const addLike = document.querySelector(`.like-button`);
+const addLike = document.querySelectorAll(`.js-like-button`);
+console.log(addLike)
 
-// const {likes} = posts
+let contLike  = document.getElementById(`like-counter-1`);
 
-// let contLike  = document.getElementById(`like-counter-${posts[i].likes}`);
+for(i=0; i<addLike.length; i++){
 
-// console.log(posts)
 
-// for(i=0; i<posts.length; i++){
-
-    addLike.addEventListener(`click`, function(){
-
-        addLike.classList.add(`like-button--liked`);
-
-        // contLike.innerHTML += posts.likes;
-        // console.log(posts.likes)
-
+    addLike[i].addEventListener(`click`, function(){
+        
+        this.classList.add(`like-button--liked`);        
+        
+        contLike.innerHTML = Number(contLike + 1);
     })
-// }
+    // let aggLike = posts[i].likes + 1
+    // console.log(aggLike)
+
+}
