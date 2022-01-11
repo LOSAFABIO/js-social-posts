@@ -139,16 +139,16 @@ const addLike = document.querySelectorAll(`.js-like-button`);
 console.log(addLike)
 
 let contLike  = document.getElementById(`like-counter-`);
+console.log(posts.length)
 
 for(i=0; i<posts.length; i++){
-
-
+console.log(i)
     addLike[i].addEventListener(`click`, function(){
         
         this.classList.add(`like-button--liked`);        
-        
+        console.log(i)
+        console.log(posts[i])
+        let aggLike = posts[i].likes + 1;
     })
-    let aggLike = posts[i].likes + 1
-    console.log(aggLike)
 
 }
