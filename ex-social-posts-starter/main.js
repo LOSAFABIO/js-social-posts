@@ -98,57 +98,167 @@ const posts = [
     }
 ];
 
-const listaPost = document.querySelector(`.posts-list`);
+// const listaPost = document.querySelector(`.posts-list`);
 
-for(i=0; i<posts.length; i++){
+// for(i=0; i<posts.length; i++){
 
-    listaPost.innerHTML += 
-        `<div class="post">
+//     listaPost.innerHTML += 
+//         `<div class="post">
+//             <div class="post__header">
+//                 <div class="post-meta">                    
+//                     <div class="post-meta__icon">
+//                         <img class="profile-pic" src="${posts[i].author.image}" alt="${posts[i].author.name}">                    
+//                     </div>
+//                     <div class="post-meta__data">
+//                         <div class="post-meta__author">${posts[i].author.name}</div>
+//                         <div class="post-meta__time">${posts[i].created}</div>
+//                     </div>                    
+//                 </div>
+//             </div>
+//             <div class="post__text">${posts[i].content}</div>
+//             <div class="post__image">
+//                 <img src="${posts[i].media}" alt="">
+//             </div>
+//             <div class="post__footer">
+//                 <div class="likes js-likes">
+//                     <div class="likes__cta">
+//                         <a class="like-button  js-like-button" href="#" data-postid="1">
+//                             <i class="like-button__icon fas fa-thumbs-up" aria-hidden="true"></i>
+//                             <span class="like-button__label">Mi Piace</span>
+//                         </a>
+//                     </div>
+//                     <div class="likes__counter">
+//                         Piace a <b id="like-counter-1" class="js-likes-counter">${posts[i].likes}</b> persone
+//                     </div>
+//                 </div> 
+//             </div>            
+//         </div>`
+// }
+
+// const addLike = document.querySelectorAll(`.js-like-button`);
+// console.log(addLike)
+
+// let contLike  = document.getElementById(`like-counter-`);
+// console.log(posts.length)
+
+// for(i=0; i<posts.length; i++){
+// console.log(i)
+//     addLike[i].addEventListener(`click`, function(){
+        
+//         this.classList.add(`like-button--liked`);        
+//         console.log(i)
+//         console.log(posts[i])
+//         let aggLike = posts[i].likes + 1;
+//     })
+
+// }
+
+
+//  SOLUZIONE PROFESSORE
+
+//recupero contenitore
+const contenitore = document.getElementById(`container`);
+//gestisco i post
+for (let index = 0; index < posts.length; index++) {
+
+    contenitore.innerHTML += getTemplate(posts[index]);
+    
+}
+
+function getTemplate(postData){ 
+//prendi i dati dal post passato da postData
+
+    const { id, content, media, author, likes, created } = postData;
+
+    const immagineProfilo = getImmagineProfilo(author)
+
+    return `
+        <div class="post">
             <div class="post__header">
                 <div class="post-meta">                    
                     <div class="post-meta__icon">
-                        <img class="profile-pic" src="${posts[i].author.image}" alt="${posts[i].author.name}">                    
+                    ${immagineProfilo}              
                     </div>
                     <div class="post-meta__data">
-                        <div class="post-meta__author">${posts[i].author.name}</div>
-                        <div class="post-meta__time">${posts[i].created}</div>
+                        <div class="post-meta__author">${author.name}</div>
+                        <div class="post-meta__time">${created}</div>
                     </div>                    
                 </div>
             </div>
-            <div class="post__text">${posts[i].content}</div>
+            <div class="post__text">${content}</div>
             <div class="post__image">
-                <img src="${posts[i].media}" alt="">
+                <img src="${media}" alt="">
             </div>
             <div class="post__footer">
                 <div class="likes js-likes">
                     <div class="likes__cta">
-                        <a class="like-button  js-like-button" href="#" data-postid="1">
+                        <a class="like-button  js-like-button" href="#" data-postid="${id}" id="like-button-${id}>
                             <i class="like-button__icon fas fa-thumbs-up" aria-hidden="true"></i>
                             <span class="like-button__label">Mi Piace</span>
                         </a>
                     </div>
                     <div class="likes__counter">
-                        Piace a <b id="like-counter-1" class="js-likes-counter">${posts[i].likes}</b> persone
+                        Piace a <b id="like-counter-${id}" class="js-likes-counter">${likes}</b> persone
                     </div>
                 </div> 
             </div>            
         </div>`
 }
 
-const addLike = document.querySelectorAll(`.js-like-button`);
-console.log(addLike)
 
-let contLike  = document.getElementById(`like-counter-`);
-console.log(posts.length)
 
-for(i=0; i<posts.length; i++){
-console.log(i)
-    addLike[i].addEventListener(`click`, function(){
+function getImmagineProfilo(autore){
+
+    const partiNome = autore.name.split(" ");
+
+    let iniziali    = " ";
+
+    for (let i = 0; i < partiNome.length; i++) {
         
-        this.classList.add(`like-button--liked`);        
-        console.log(i)
-        console.log(posts[i])
-        let aggLike = posts[i].likes + 1;
+        iniziali += partiNome[i][0];
+    }
+    if(autore.image){
+        return `<img class="profile-pic" src="${autore.image}" alt="${autore.name}">`
+    }else {
+        return `<div class="profile-pic-default"><span>${iniziali}</span></div>`;
+    }
+
+}
+
+const bottoniLike   = document.querySelectorAll(`.js-like-button`);
+
+const contatoriLike = document.querySelectorAll(`.js-likes-counter`);
+
+for (let index = 0; index < bottoniLike.length; index++) {
+
+    const bottone = bottoniLike[index];
+
+    bottone.addEventListener(`click`, function(e){
+
+        e.preventDefault();
+
+        //controllare se è un già like
+        
+        if (!this.classList.contains(`like-button--liked`)){ // se NON like, aggiungi
+            this.classList.add(`like-button--liked`);
+
+            //gestisco contatore
+            const contatore = contatoriLike[index];
+            //recupero numero
+            const numero    = parseInt(contatore.innerHTML);
+            //incremento
+            contatore.innerHTML = numero + 1; 
+        }else{                                               // se Like, togli
+            this.classList.remove(`like-button--liked`);
+
+            //gestisco contatore
+            const contatore = contatoriLike[index];
+            //recupero numero
+            const numero    = parseInt(contatore.innerHTML);
+            //incremento
+            contatore.innerHTML = numero - 1; 
+
+        }
     })
 
 }
